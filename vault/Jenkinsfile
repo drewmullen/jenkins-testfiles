@@ -7,10 +7,10 @@ pipeline {
                 script {
                     def secrets = [
                         [
-                            path: 'kvv1/db',
+                            path: 'kv/test',
                             engineVersion: 1,
                             secretValues: [
-                                [envVar: 'MY_SECRET', vaultKey: 'password']
+                                [envVar: 'MY_SECRET', vaultKey: 'name']
                             ]
                         ]
                     ]
