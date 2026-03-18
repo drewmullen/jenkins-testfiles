@@ -22,7 +22,7 @@ pipeline {
                         
                         // Test the credentials by connecting to PostgreSQL and running a simple query
                         sh '''
-                            PGPASSWORD="${DB_PASSWORD}" psql -h postgres -U "${DB_USERNAME}" -d testdb -c "SELECT current_user, current_database(), now();"
+                            PGPASSWORD="${DB_PASSWORD}" psql -h postgres -U "${DB_USERNAME}" -d vaultdb -c "SELECT current_user, current_database(), now();"
                         '''
                         
                         echo "Database connection successful! Credentials are valid."
