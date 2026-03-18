@@ -1,0 +1,27 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Test Vault Connection') {
+            steps {
+                script {
+                    def secrets = [
+                        [
+                            path: 'kvv1/db',
+                            engineVersion: 1,
+                            secretValues: [
+                                [envVar: 'MY_SECRET', vaultKey: 'password']
+                            ]
+                        ]
+                    ]
+                    
+                    withVault([vaultSecrets: secrets]) {
+                        echo "Successfully retrieved secret from Vault!"
+                        // Don't print actual secrets in production
+                        sh 'echo "Secret length: ${#MY_SECRET}"'
+                    }
+                }
+            }
+        }
+    }
+}
