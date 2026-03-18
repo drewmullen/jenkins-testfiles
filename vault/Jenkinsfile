@@ -7,10 +7,10 @@ pipeline {
                 script {
                     def secrets = [
                         [
-                            path: 'kv/test',
+                            path: 'database/creds/dynamic-role',
                             engineVersion: 1,
                             secretValues: [
-                                [envVar: 'MY_SECRET', vaultKey: 'name']
+                                [envVar: 'MY_SECRET', vaultKey: 'password']
                             ]
                         ]
                     ]
