@@ -2,7 +2,7 @@ pipeline {
     agent any
     
     stages {
-        stage('Test Vault Connection') {
+        stage('Get Dynamic DB Credentials') {
             steps {
                 script {
                     def secrets = [
@@ -10,15 +10,22 @@ pipeline {
                             path: 'database/creds/dynamic-role',
                             engineVersion: 1,
                             secretValues: [
-                                [envVar: 'MY_SECRET', vaultKey: 'password']
+                                [envVar: 'DB_USERNAME', vaultKey: 'username'],
+                                [envVar: 'DB_PASSWORD', vaultKey: 'password']
                             ]
                         ]
                     ]
                     
                     withVault([vaultSecrets: secrets]) {
-                        echo "Successfully retrieved secret from Vault!"
-                        // Don't print actual secrets in production
-                        sh 'echo "Secret length: ${#MY_SECRET}"'
+                        echo "Successfully retrieved dynamic credentials from Vault!"
+                        echo "Username: ${DB_USERNAME}"
+                        
+                        // Test the credentials by connecting to PostgreSQL and running a simple query
+                        sh '''
+                            PGPASSWORD="${DB_PASSWORD}" psql -h postgres -U "${DB_USERNAME}" -d testdb -c "SELECT current_user, current_database(), now();"
+                        '''
+                        
+                        echo "Database connection successful! Credentials are valid."
                     }
                 }
             }
